@@ -1,0 +1,140 @@
+import p
+import threading
+import time
+import sys
+from gpiozero import Motor
+from multiprocessing import Manager, Process
+
+motorA = Motor(forward=8, backward=7)
+motorB = Motor(forward=24, backward=23)
+motorC = Motor(forward=10, backward=9)
+motorD = Motor(forward=22, backward=27)
+
+def motor_go():
+    motorA.forward(1)
+    motorB.forward(1)
+    motorC.forward(1)
+    motorD.forward(1)
+def motor_back():
+    motorA.backward(1)
+    motorB.backward(1)
+    motorC.backward(1)
+    motorD.backward(1)
+def motor_right():
+    motorA.forward(0.6)
+    motorB.backward(0.6)
+    motorC.forward(0.6)
+    motorD.backward(0.6)
+def motor_left():
+    motorA.backward(0.6)
+    motorB.forward(0.6)
+    motorC.backward(0.6)
+    motorD.forward(0.6)
+def motor_stop():
+    motorA.stop()
+    motorB.stop()
+    motorC.stop()
+    motorD.stop()
+distances = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100]
+def get_and_print_distance():
+    global distances
+    
+    distances = Manager().list()
+    while True : 
+        distances = p.get_distance()
+
+stop_thread = threading.Event()
+distance_thread = threading.Thread(target=get_and_print_distance)
+distance_thread.daemon=True
+distance_thread.start()
+
+sensor_process = Process(target=get_and_print_distance)
+sensor_process.start()
+
+go_process = Process(target=motor_go)
+left_process = Process(target=motor_go)
+right_process = Process(target=motor_go)
+
+
+#move_thread.start()
+def evasion() :
+    print('called')
+    turn_times = 0
+    go_times = 0
+    turn_tmp = 0
+    go_tmp = 0
+    #if distances[0] > distances[2] : #좌측 이동
+        #print('1')
+    print(distances[2])
+    while distances[2] > 25 :
+        print('turn left')
+        motor_left()
+        turn_times += 1
+        time.sleep(0.5)
+    turn_tmp = turn_times
+    while distances[4] > 35 :
+        print('go')
+        motor_go()
+        go_times += 1
+        time.sleep(0.5)
+    go_tmp = go_times
+    while turn_times : 
+        motor_right()
+        print('turn right')
+        turn_times -= 1
+        time.sleep(0.5)
+    
+    
+    while distances[6] > 20 : #차 끝까지 이동
+        print('go')
+        motor_go()
+        time.sleep(0.5)
+        
+    #car passing obj
+        
+    turn_times = turn_tmp
+    while turn_times : 
+        motor_right()
+        print('turn right')
+        turn_times -= 1
+        time.sleep(0.5)
+    while go_times :
+        motor_go()
+        print('go')
+        go_times -= 1
+    turn_times = turn_tmp
+    while turn_times :
+        print('turn left')
+        motor_left()
+        turn_times -= 1
+        time.sleep(0.5)
+    print("OK!")
+def main():
+    k=0
+    print("i'm main")
+    move_thread.start()
+    stop_thread.set()
+    while True:
+        
+        motor_go()
+        print('go')
+        if len(distances) > 1 and distances[1]<15 : 
+            motor_stop()
+            print("stop!")
+            evasion()
+        else :
+            #print("go! "+str(k))
+            #k+=1
+            motor_go()
+        time.sleep(0.1)
+
+if __name__ == '__main__':
+    try:
+        #stop_thread = threading.Event()
+        #distance_thread = threading.Thread(target=get_and_print_distance)
+        #distance_thread.daemon=True
+        #distance_thread.start()
+        main()
+    except KeyboardInterrupt:
+        stop_thread.set()
+        # GPIO 리소스 정리 코드 추가
