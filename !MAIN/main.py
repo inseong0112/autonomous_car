@@ -37,7 +37,7 @@ def main():
 
         if ret:
             # 이미지를 원하는 크기로 자르기 (예: 하단 부분)
-            crop_img = frame[315:410, 15:625]
+            crop_img = frame[350:410, 15:625]
 
             # 흑백 변환
             gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
