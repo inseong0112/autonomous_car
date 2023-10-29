@@ -22,10 +22,10 @@ while camera.isOpened():
         Median_blur = cv2.medianBlur(Gaussian_blur, 3)
 
         # Canny 엣지 감지
-        edges2 = cv2.Canny(Median_blur, 50, 200)
+        #edges2 = cv2.Canny(Median_blur, 50, 200)
 
         # 허프 변환을 사용하여 선 탐지
-        lines = cv2.HoughLinesP(edges2, 1, np.pi / 180, 20, maxLineGap=200)
+        lines = cv2.HoughLinesP(Median_blur, 1, np.pi / 180, 20, maxLineGap=200)
         left_lines = []  # 왼쪽에 있는 직선
         right_lines = []  # 오른쪽에 있는 직선
 
@@ -61,20 +61,20 @@ while camera.isOpened():
             elif len(right_lines) == 0:
                 center = (610, 50)
 
-            cv2.circle(crop_img, center, int(30), (255, 250, 0), 5)
+            #cv2.circle(crop_img, center, int(30), (255, 250, 0), 5)
 
-            if center[0] < 275 :
-                print('turn left')
-            elif center[0] > 375:
-                print('turn right')
-            else :
-                print('go')
+            #if center[0] < 275 :
+                #print('turn left')
+            #elif center[0] > 375:
+                #print('turn right')
+            #else :
+                #print('go')
 
 
         cv2.line(frame, (320, 0), (320, 640), (255, 0, 0), 2)
         cv2.line(frame, (0, 350), (640, 350), (255, 0, 0), 2)
         cv2.imshow('Original', frame)
-        cv2.imshow('Edges2', edges2)
+        cv2.imshow('Edges2', Median_blur)
         #print(left_lines, right_lines)
         if cv2.waitKey(1) == ord('q'):
             break
