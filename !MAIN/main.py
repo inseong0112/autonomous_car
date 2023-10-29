@@ -58,7 +58,6 @@ def main():
             avg_right = 0
 
             if lines is not None:
-
                 for line in lines:
                     x1, y1, x2, y2 = line[0]
                     slope = (y2 - y1) / (x2 - x1)

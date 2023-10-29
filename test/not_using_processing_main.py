@@ -3,6 +3,7 @@ import time
 import threading
 import numpy as np
 import math
+import motor
 
 camera = cv2.VideoCapture(0)
 camera.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
@@ -65,12 +66,36 @@ def detect(frame):
     else:
         return 'unknown'
 
+
+def manual():
+    while(1):
+        keyValue = cv2.waitKey(10)
+        if keyValue == ord('q'):
+            print("stop")
+            motor.stop()
+            break
+        if keyValue == ord('w'):
+            print("go")
+            motor.go()
+        elif keyValue == ord('s'):
+            print("back")
+            motor.back()
+        elif keyValue == ord('a'):
+            print("left")
+            motor.left()
+        elif keyValue == ord('d'):
+            print("right")
+            motor.right()
+        if keyValue == ord('b'):
+            print("stop")
+            motor.stop()
+
 if __name__ == '__main__':
     while camera.isOpened():
         ret, frame = camera.read()   
         try:
             # 이미지를 원하는 크기로 자르기 (예: 하단 부분)
-            crop_img = frame[315:410, 15:625]
+            crop_img = frame[350:410, 15:625]
             red_light = detect(frame)
             # 흑백 변환
             gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
@@ -91,7 +116,6 @@ if __name__ == '__main__':
             avg_right = 0
 
             if lines is not None:
-
                 for line in lines:
                     x1, y1, x2, y2 = line[0]
                     slope = (y2 - y1) / (x2 - x1)
