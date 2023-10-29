@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "autonomous_car",
+			"path": "."
+		},
+		{
+			"name": "!Final",
+			"path": "../../!Final"
+		}
+	],
+	"settings": {}
+}
