@@ -114,15 +114,13 @@ if __name__ == '__main__':
                     if not math.isinf(avg_left) and not math.isinf(avg_right) and not math.isnan(avg_left) and not math.isnan(avg_right):
                         center = (int((avg_left + avg_right) / 2), 50)
 
-                elif len(left_lines) == 0:
-                    center = (30, 50)
-                elif len(right_lines) == 0:
-                    center = (610, 50)
+                    elif len(left_lines) == 0:
+                        center = (30, 50)
+                    elif len(right_lines) == 0:
+                        center = (610, 50)
 
-                cv2.circle(crop_img, center, int(30), (255, 250, 0), 5)
-                
-                
-
+                    cv2.circle(crop_img, center, int(30), (255, 250, 0), 5)
+                                   
                 if red_light == 'unknown' and red_light == 'green':
                     if center[0] < 275 :
                         print('turn left')
