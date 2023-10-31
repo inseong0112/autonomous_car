@@ -13,7 +13,8 @@ camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 red_light = None
 
 def read_distance(prox):
-    while True : 
+    while True :
+        #prox.value = 100
         prox.value = proximity.read_distance()
         time.sleep(0.1)
 
@@ -66,7 +67,7 @@ def detect(frame):
     # 각 색상에 맞는 사각형 그리고 넓이 출력
     for contour in contours_red:
         area = cv2.contourArea(contour)
-        if area >= 1000:
+        if area >= 10000:
             x, y, w, h = cv2.boundingRect(contour)
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)  # 빨간색
             cv2.putText(frame, f'Red: {area}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
@@ -74,7 +75,7 @@ def detect(frame):
 
     for contour in contours_yellow:
         area = cv2.contourArea(contour)
-        if area >= 1000:
+        if area >= 10000:
             x, y, w, h = cv2.boundingRect(contour)
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 255), 2)  # 노란색
             cv2.putText(frame, f'Yellow: {area}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 255), 2)
@@ -82,7 +83,7 @@ def detect(frame):
 
     for contour in contours_green:
         area = cv2.contourArea(contour)
-        if area >= 1000:
+        if area >= 10000:
             x, y, w, h = cv2.boundingRect(contour)
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)  # 초록색
             cv2.putText(frame, f'Green: {area}', (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
@@ -96,11 +97,15 @@ def detect(frame):
         return 'unknown'
 
 def main():
+    if not camera.isOpened():
+        print('cam error')
+        camera.release()
+        return
     while camera.isOpened():
         ret, frame = camera.read()
 
         if ret:
-            traffic_light_roi = frame[0:300, 0:640]
+            traffic_light_roi = frame[0:350, 0:640]
             traffic_light = detect(traffic_light_roi)
             cv2.imshow('roi', traffic_light_roi)
 
@@ -149,49 +154,27 @@ def main():
                     avg_right = (max(right_lines) + min(right_lines)) / 2
 
                     if not math.isinf(avg_left) and not math.isinf(avg_right) and not math.isnan(avg_left) and not math.isnan(avg_right):
-                        center = (int((avg_left + avg_right) / 2), 50)
+                        center = int((avg_left + avg_right) / 2)
 
                 elif len(left_lines) == 0:
-                    center = (30, 50)
+                    center = 30
                 elif len(right_lines) == 0:
-                    center = (610, 50)
+                    center = 610
 
-                cv2.circle(crop_img, center, int(30), (255, 250, 0), 5)
+                cv2.circle(crop_img, (int(center), 150), 30, (255, 250, 0), 5)
                 #print(center[0])
                 print(prox.value)
-                if int(prox.value) < 30 :
-                    print('Stop!!')
-                    motor.go()
-                    time.sleep(0.1)
+                if prox.value < 25:
+                    print('Emergency Stop!')
                     motor.stop()
-                    time.sleep(0.5)
-                    motor.back()
-                    time.sleep(1)
-                    
-                    motor.right()
-                    time.sleep(1)
-                    motor.go()
-                    time.sleep(0.4)
-                
-                    motor.left()
-                    time.sleep(2)
-                    
-                    #motor.go()
-                    #time.sleep(0.2)
-                    
-                    motor.left()
-                    time.sleep(2)
-                    motor.right()
-                    
-                    time.sleep(1.5)
-                    
                 elif traffic_light == 'red':
                     print('Red Light Stop!')
                     motor.stop()
-                elif center[0] < 260 :#275
+                
+                elif center < 260 :#275
                     print('turn left')
                     motor.left()
-                elif center[0] > 380: #375
+                elif center > 380: #375
                     print('turn right')
                     motor.right()
                 else :
@@ -211,6 +194,12 @@ def main():
                 cv2.destroyAllWindows()
                 motor.servo.p1.stop()
                 break
+        else :
+            print('cam error')
+            camera.release()
+            motor.stop()
+            cv2.destroyAllWindows()
+            break
     camera.release()
     motor.stop()
     cv2.destroyAllWindows()
