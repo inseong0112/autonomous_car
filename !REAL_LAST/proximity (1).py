@@ -8,11 +8,7 @@ GPIO.setup(ECHO_PIN, GPIO.IN)
 
 def read_distance():
     GPIO.output(TRIG_PIN, False)
-<<<<<<< HEAD
-    time.sleep(0.2)  # 센서를 초기화하기 위한 시간
-=======
     time.sleep(0.3)  # 센서를 초기화하기 위한 시간
->>>>>>> 16c97120c02a81abb912ad1dc582028259dc55fb
     
     GPIO.output(TRIG_PIN, True)
     time.sleep(0.00001)
