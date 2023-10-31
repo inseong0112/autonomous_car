@@ -14,7 +14,7 @@ while camera.isOpened():
     # 흑백 변환
     gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
 
-    # Gaussian Blur 적용
+    # Gaussian Blur, Median Blur 적용
     Gaussian_blur = cv2.GaussianBlur(gray, (5, 5), 0)
     Median_blur = cv2.medianBlur(Gaussian_blur, 3)
 
