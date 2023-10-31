@@ -32,29 +32,10 @@ def back():
 
 def stop():
     motorA.stop()
-    motorB.stop()
-    #motorC.stop()
-    #motorD.stop()
+    motorB.stop() 
+    servo.p1.stop()
+
 
 if __name__ == '__main__' :
-    try :
-        time.sleep(0.5)
-        go()
-        time.sleep(0.2)
-        #left()
-        #time.sleep(2)
-        #right()
-        #time.sleep(2)
-        #go()
-        #time.sleep(2)
-        stop()
-        
-        servo.p1.stop()
-        #servo.p2.stop()
-        
-    except KeyboardInterrupt:
-        
-        servo.p1.stop()
-        servo.p2.stop()
-        stop()
+    stop()
         

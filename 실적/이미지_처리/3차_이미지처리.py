@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 
-# 비디오 캡처 초기화
 camera = cv2.VideoCapture(0)
 camera.set(3, 640)  # 너비
 camera.set(4, 480)  # 높이

@@ -12,9 +12,9 @@ camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
 red_light = None
 
+# 근접 센서 값 불러오기
 def read_distance(prox):
     while True :
-        #prox.value = 100
         prox.value = proximity.read_distance()
         time.sleep(0.1)
 

@@ -25,7 +25,12 @@ def read_distance():
     
     pulse_duration = pulse_end - pulse_start
     distance = pulse_duration * 34300 / 2  # 초당 343m 속도로 음파가 이동
-    return round(distance, 2)
+    return round(distance, 2)       #소수점 두번째에서 반올림 
+
+
+
+
+
 if __name__ == '__main__':
     try:
         while True:
