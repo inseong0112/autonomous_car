@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import time
 
 # 비디오 캡처 초기화
 camera = cv2.VideoCapture(0)
@@ -13,7 +14,7 @@ while camera.isOpened():
         # ROI 지정
         crop_img = frame[300:480, 0:640]
 
-        # 흑백 변환
+        # 흑백 변환qq
         gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
 
         # Gaussian Blur, Median Blur 적용
@@ -26,27 +27,23 @@ while camera.isOpened():
         # 허프 변환
         lines = cv2.HoughLinesP(edges2, 1, np.pi / 180, 100, maxLineGap=200)
 
-        if lines is not None and len(lines) >= 2:
-            # 선의 길이를 계산
+        if len(lines) >= 2:
+            # 선의 길이를 계산 (시작점의 (x, y) - 끝점의 (x, y))
             line_lengths = [np.linalg.norm(np.array(line[0][:2]) - np.array(line[0][2:4])) for line in lines]
 
-            # 가장 긴 2개의 선 
-            top_2_indices = np.argsort(line_lengths)[-2:]
+            # 가장 긴 2개의 선 (오름차순 정렬, 맨 뒤 두개 선택)
+            top_2 = np.argsort(line_lengths)[-2:]
 
-            # 선택한 가장 긴 2개의 선의 중점
-            midpoints = []
-            for index in top_2_indices:
-                line = lines[index][0]
-                x1, y1, x2, y2 = line
-                cv2.line(crop_img, (x1, y1), (x2, y2), (0, 0, 255), 5)
-                midpoint_x = (x1 + x2) // 2
-                midpoint_y = (y1 + y2) // 2
-                midpoints.append((midpoint_x, midpoint_y))
+            x1, y1, x2, y2 = lines[top_2[0]][0]
+            cv2.line(crop_img, (x1, y1), (x2, y2), (0, 0, 255), 5)
+            x = x1 + x2
 
-            # 두 선의 중점에 원 그리기
-            x1, y1 = midpoints[0]
-            x2, y2 = midpoints[1]
-            cv2.circle(crop_img, (int((x1+x2)/2), int((y1+y2)/2)), 30, (255, 0, 0), 3)
+            x1, y1, x2, y2 = lines[top_2[1]][0]
+            cv2.line(crop_img, (x1, y1), (x2, y2), (0, 0, 255), 5)
+            x += x1 + x2
+
+            cv2.circle(crop_img, (int(x/4), 100), 30, (255, 0, 0), 3)
+
 
         cv2.imshow('Original', frame)
         cv2.imshow('Edges2', edges2)

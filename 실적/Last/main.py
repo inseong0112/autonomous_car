@@ -102,8 +102,6 @@ def main():
                 elif len(right_lines) == 0: # right_lines 감지되지 않았을 경우 
                     center = 610
 
-                cv2.circle(crop_img, (int(center), 100), 30, (255, 250, 0), 5)
-
                 print(prox.value)
                 if prox.value < 25 :    # 25cm 이내에 물체가 있는 경우
                     print('Emergency Stop!')
