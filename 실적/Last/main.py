@@ -120,7 +120,7 @@ def main():
                     motor.go()
 
             cv2.line(frame, (320, 0), (320, 640), (255, 0, 0), 2)
-            cv2.line(frame, (0, 440), (640, 440), (255, 0, 0), 2)
+            cv2.line(frame, (0, 440), (640, 40), (255, 0, 0), 2)
 
             cv2.imshow('Original', frame)
             cv2.imshow('Edge', edge)
@@ -136,10 +136,12 @@ def main():
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-
-    prox = Value('f', 400.0)    # processing Value 이용해서 공유 메모리 만듦
-    process = Process(target=read_distance, args=(prox, ))  # 프로세스 형성
-    process.daemon = True       # 백그라운드 프로세스
+    # processing Value 이용해서 공유 메모리 만듦
+    prox = Value('f', 400.0)    
+    # 프로세스 형성
+    process = Process(target=read_distance, args=(prox, ))  
+    # 백그라운드 프로세스
+    process.daemon = True       
     process.start()
     main()
     process.join()  # main 프로세스가 종료될 때까지 대기
