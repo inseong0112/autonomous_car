@@ -120,7 +120,7 @@ def main():
                     motor.go()
 
             cv2.line(frame, (320, 0), (320, 640), (255, 0, 0), 2)
-            cv2.line(frame, (0, 430), (640, 430), (255, 0, 0), 2)
+            cv2.line(frame, (0, 440), (640, 440), (255, 0, 0), 2)
 
             cv2.imshow('Original', frame)
             cv2.imshow('Edge', edge)

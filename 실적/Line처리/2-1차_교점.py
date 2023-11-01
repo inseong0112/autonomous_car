@@ -48,7 +48,9 @@ while camera.isOpened():
                     cv2.circle(crop_img, (int(avg_left), 100), 30, (0, 0, 255), 5)
                     cv2.circle(crop_img, (int(avg_right), 100), 30, (0, 255, 0), 5)
                     cv2.circle(crop_img, (int((avg_left + avg_right) / 2), 100), 30, (0, 255, 255), 5)
-                
+            
+            cv2.line(frame, (320, 0), (320, 640), (255, 0, 0), 2)
+            cv2.line(crop_img, (0, 100), (640, 100), (255, 0, 0), 2)
             cv2.imshow('Original', frame)
             cv2.imshow('Edges2', edges2)
 
