@@ -22,26 +22,26 @@ while camera.isOpened():
         edges2 = cv2.Canny(Median_blur, 50, 200)
         # 허프 변환을 사용하여 선 탐지
         lines = cv2.HoughLinesP(edges2, 1, np.pi / 180, 20, maxLineGap=200)
+
+        
         left_lines = []  # 왼쪽에 있는 직선
         right_lines = []  # 오른쪽에 있는 직선
         if lines is not None:
             for line in lines:
                 x1, y1, x2, y2 = line[0]
-                slope = (y2 - y1) / (x2 - x1)               # 기울기 
-                intercept = y1 - slope * x1                 # y절편
-                intersection_x = (100 - intercept) / slope  # 교점 x 좌표 계산
+                # 직선의 방정식 찾는 과정
+                slope = (y2 - y1) / (x2 - x1)               # 기울기 계산
+                intercept = y1 - slope * x1                 # y절편 계산
 
+                intersection_x = (100 - intercept) / slope  # y=100과 교점 x 좌표 계산
                 if intersection_x < 320:    # 320을 기준으로 왼쪽과 오른쪽 판단
                     left_lines.append(intersection_x)
                 else:
                     right_lines.append(intersection_x)
 
-            avg_left = 0 
-            avg_right = 0
-
-            if len(left_lines) > 0 and len(right_lines) > 0:        # left_lines와 right_lines에 값이 있는지 확인
-                avg_left = (max(left_lines) + min(left_lines)) / 2 
-                avg_right = (max(right_lines) + min(right_lines)) / 2
+            if len(left_lines) > 0 and len(right_lines) > 0: 
+                avg_left = (max(left_lines) + min(left_lines)) / 2      # 최대값과 최솟값의 평균을
+                avg_right = (max(right_lines) + min(right_lines)) / 2   # 선의 중심으로 취급함
 
                 # 무한대, Nan인 경우 제외
                 if not math.isinf(avg_left) and not math.isinf(avg_right) and not math.isnan(avg_left) and not math.isnan(avg_right):

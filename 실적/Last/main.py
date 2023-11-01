@@ -75,9 +75,9 @@ def main():
             if lines is not None:
                 for line in lines:
                     x1, y1, x2, y2 = line[0]
-                    slope = (y2 - y1) / (x2 - x1)               # 기울기 
-                    intercept = y1 - slope * x1                 # y절편
-                    intersection_x = (100 - intercept) / slope  # 교점 x 좌표 계산
+                    slope = (y2 - y1) / (x2 - x1)               # 기울기 계산
+                    intercept = y1 - slope * x1                 # y절편 계산 
+                    intersection_x = (100 - intercept) / slope  # y=100과 교점 x 좌표 계산
 
                     if intersection_x < 320:    # 320을 기준으로 왼쪽과 오른쪽 판단
                         left_lines.append(intersection_x)
