@@ -33,4 +33,3 @@ def stop():
     motorD.stop()
 
 sys.stdout.flush
-

@@ -20,20 +20,19 @@ def read_distance(prox):
 
 # 신호등 감지
 def detect(frame):
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
     global red_light
-    # 색상 범위 설정
-    lower_red = np.array([136, 87, 111])
+
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    lower_red = np.array([136, 87, 111])    # 색상 범위 설정
     upper_red = np.array([180, 255, 255])
     lower_green = np.array([66, 122, 129])
     upper_green = np.array([86, 255, 255])
-
-    # lower, upper 범위에 속하는 경우 255(흰색), 아니면 0(검정색)
-    maskr = cv2.inRange(hsv, lower_red, upper_red)
+    
+    maskr = cv2.inRange(hsv, lower_red, upper_red)      # lower, upper 범위에 속하는 경우 255(흰색), 아니면 0(검정색)
     maskg = cv2.inRange(hsv, lower_green, upper_green)
-
-    # 색상에 따라 윤곽선 찾기
-    contours_red, _ = cv2.findContours(maskr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    contours_red, _ = cv2.findContours(maskr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)   # 색상에 따라 윤곽선 찾기
     contours_green, _ = cv2.findContours(maskg, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     # 각 색상에 맞는 사각형 그리고 넓이 보여주기
@@ -75,9 +74,9 @@ def main():
             if lines is not None:
                 for line in lines:
                     x1, y1, x2, y2 = line[0]
-                    slope = (y2 - y1) / (x2 - x1)               # 기울기 
-                    intercept = y1 - slope * x1                 # y절편
-                    intersection_x = (100 - intercept) / slope  # 교점 x 좌표 계산
+                    slope = (y2 - y1) / (x2 - x1)               # 기울기 계산
+                    intercept = y1 - slope * x1                 # y절편 계산 
+                    intersection_x = (100 - intercept) / slope  # y=100과 교점 x 좌표 계산
 
                     if intersection_x < 320:    # 320을 기준으로 왼쪽과 오른쪽 판단
                         left_lines.append(intersection_x)
@@ -102,8 +101,6 @@ def main():
                 elif len(right_lines) == 0: # right_lines 감지되지 않았을 경우 
                     center = 610
 
-                cv2.circle(crop_img, (int(center), 100), 30, (255, 250, 0), 5)
-
                 print(prox.value)
                 if prox.value < 25 :    # 25cm 이내에 물체가 있는 경우
                     print('Emergency Stop!')
@@ -122,7 +119,7 @@ def main():
                     motor.go()
 
             cv2.line(frame, (320, 0), (320, 640), (255, 0, 0), 2)
-            cv2.line(frame, (0, 430), (640, 430), (255, 0, 0), 2)
+            cv2.line(frame, (0, 440), (640, 40), (255, 0, 0), 2)
 
             cv2.imshow('Original', frame)
             cv2.imshow('Edge', edge)
@@ -138,10 +135,12 @@ def main():
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-
-    prox = Value('f', 400.0)    # processing Value 이용해서 공유 메모리 만듦
-    process = Process(target=read_distance, args=(prox, ))  # 프로세스 형성
-    process.daemon = True       # 백그라운드 프로세스
+    # processing Value 이용해서 공유 메모리 만듦
+    prox = Value('f', 400.0)    
+    # 프로세스 형성
+    process = Process(target=read_distance, args=(prox, ))  
+    # 백그라운드 프로세스
+    process.daemon = True       
     process.start()
     main()
     process.join()  # main 프로세스가 종료될 때까지 대기
