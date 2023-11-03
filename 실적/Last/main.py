@@ -20,19 +20,18 @@ def read_distance(prox):
 
 # 신호등 감지
 def detect(frame):
-
-    global red_light
-
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     lower_red = np.array([136, 87, 111])    # 색상 범위 설정
     upper_red = np.array([180, 255, 255])
     lower_green = np.array([66, 122, 129])
     upper_green = np.array([86, 255, 255])
-    
-    maskr = cv2.inRange(hsv, lower_red, upper_red)      # lower, upper 범위에 속하는 경우 255(흰색), 아니면 0(검정색)
+
+    # lower, upper 범위에 속하는 경우 255(흰색), 아니면 0(검정색)
+    maskr = cv2.inRange(hsv, lower_red, upper_red)      
     maskg = cv2.inRange(hsv, lower_green, upper_green)
-    
-    contours_red, _ = cv2.findContours(maskr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)   # 색상에 따라 윤곽선 찾기
+
+    # 색상에 따라 윤곽선 찾기
+    contours_red, _ = cv2.findContours(maskr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)   
     contours_green, _ = cv2.findContours(maskg, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     # 각 색상에 맞는 사각형 그리고 넓이 보여주기
@@ -53,6 +52,8 @@ def detect(frame):
             return 'green'
 
     return 'unknown'
+
+
 
 def main():
     while camera.isOpened():
@@ -96,9 +97,9 @@ def main():
                     if not math.isinf(avg_left) and not math.isinf(avg_right) and not math.isnan(avg_left) and not math.isnan(avg_right):
                         center = int((avg_left + avg_right) / 2)
 
-                elif len(left_lines) == 0:  # left_lines 감지 되지 않았을 경우 
+                elif len(left_lines) == 0:  # left_lines 감지 되지 않았을 경우 중심을 가장 좌측으로 보냄
                     center = 30
-                elif len(right_lines) == 0: # right_lines 감지되지 않았을 경우 
+                elif len(right_lines) == 0: # right_lines 감지되지 않았을 경우 중심을 가장 우측으로 보냄
                     center = 610
 
                 print(prox.value)

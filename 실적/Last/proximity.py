@@ -28,12 +28,6 @@ def read_distance():
     return round(distance, 2)       #소수점 두번째에서 반올림 
 
 
-
-
-
-
-
-
 if __name__ == '__main__':
     try:
         while True:
