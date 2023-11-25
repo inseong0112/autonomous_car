@@ -12,7 +12,9 @@ while camera.isOpened():
 
     if ret:
         # ROI 지정
-        crop_img = frame[300:480, 0:640]
+        crop_img = frame[340:400, 0:640]
+        #cv2.line(frame, (0, 200), (640, 200), (255, 0, 0), 2)
+        #cv2.line(frame, (0, 380), (640, 380), (255, 0, 0), 2)
         # 흑백 변환
         gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
         # Gaussian Blur, Median Blur 적용
@@ -45,8 +47,8 @@ while camera.isOpened():
 
                 # 무한대, Nan인 경우 제외
                 if not math.isinf(avg_left) and not math.isinf(avg_right) and not math.isnan(avg_left) and not math.isnan(avg_right):
-                    cv2.circle(crop_img, (int(avg_left), 100), 30, (0, 0, 255), 5)
-                    cv2.circle(crop_img, (int(avg_right), 100), 30, (0, 255, 0), 5)
+                    cv2.circle(crop_img, (int(avg_left), 50), 30, (0, 0, 255), 5)
+                    cv2.circle(crop_img, (int(avg_right), 50), 30, (0, 255, 0), 5)
                     cv2.circle(crop_img, (int((avg_left + avg_right) / 2), 100), 30, (255, 255, 0), 5)
 
             cv2.line(frame, (320, 0), (320, 640), (255, 0, 0), 2)

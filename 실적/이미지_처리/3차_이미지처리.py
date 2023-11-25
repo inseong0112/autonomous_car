@@ -9,7 +9,7 @@ while camera.isOpened():
     ret, frame = camera.read()
 
     #ROI 지정
-    crop_img = frame[300:480, 0:640]
+    crop_img = frame[340:400, 0:640]    
 
     # 흑백 변환
     gray = cv2.cvtColor(crop_img, cv2.COLOR_BGR2GRAY)
